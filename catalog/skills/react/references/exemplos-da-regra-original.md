@@ -9,28 +9,28 @@ Mantenha cada componente com no máximo 30 linhas. Extraia partes coesas em comp
 ### Incorreto
 
 ```tsx
-function DashboardFranquia({ franquia }: Props) {
+function DashboardLoja({ loja }: Props) {
   return (
     <main>
       <header>
-        <h1>{franquia.nome}</h1>
-        <p>{franquia.endereco}</p>
+        <h1>{loja.nome}</h1>
+        <p>{loja.endereco}</p>
         <button onClick={abrirEdicao}>Editar</button>
       </header>
       <section>
         <h2>Indicadores</h2>
-        <p>Faturamento: {franquia.faturamento}</p>
-        <p>Clientes: {franquia.clientes}</p>
-        <p>Conversão: {franquia.conversao}</p>
+        <p>Faturamento: {loja.faturamento}</p>
+        <p>Clientes: {loja.clientes}</p>
+        <p>Conversão: {loja.conversao}</p>
       </section>
       <section>
         <h2>Últimos pedidos</h2>
-        {franquia.pedidos.map((pedido) => (
+        {loja.pedidos.map((pedido) => (
           <article key={pedido.id}>{pedido.descricao}</article>
         ))}
       </section>
       <footer>
-        <p>Atualizado em {franquia.atualizadoEm}</p>
+        <p>Atualizado em {loja.atualizadoEm}</p>
         <button onClick={abrirSuporte}>Falar com suporte</button>
       </footer>
     </main>
@@ -41,13 +41,13 @@ function DashboardFranquia({ franquia }: Props) {
 ### Correto
 
 ```tsx
-function DashboardFranquia({ franquia }: Props) {
+function DashboardLoja({ loja }: Props) {
   return (
     <main>
-      <CabecalhoFranquia franquia={franquia} />
-      <IndicadoresFranquia indicadores={franquia.indicadores} />
-      <ListaDePedidos pedidos={franquia.pedidos} />
-      <RodapeFranquia atualizadoEm={franquia.atualizadoEm} />
+      <CabecalhoLoja loja={loja} />
+      <IndicadoresLoja indicadores={loja.indicadores} />
+      <ListaDePedidos pedidos={loja.pedidos} />
+      <RodapeLoja atualizadoEm={loja.atualizadoEm} />
     </main>
   );
 }
@@ -118,25 +118,25 @@ Use `useMemo` quando um cálculo for realmente custoso e depender de valores est
 ### Incorreto
 
 ```tsx
-function ListaDeFranquias({ franquias, busca }: Props) {
-  const franquiasFiltradas = franquias
-    .filter((franquia) => franquia.nome.includes(busca))
+function ListaDeLojas({ lojas, busca }: Props) {
+  const lojasFiltradas = lojas
+    .filter((loja) => loja.nome.includes(busca))
     .sort((a, b) => a.nome.localeCompare(b.nome));
 
-  return <Tabela franquias={franquiasFiltradas} />;
+  return <Tabela lojas={lojasFiltradas} />;
 }
 ```
 
 ### Correto
 
 ```tsx
-function ListaDeFranquias({ franquias, busca }: Props) {
-  const franquiasFiltradas = useMemo(
-    () => filtrarEOrdenarFranquias(franquias, busca),
-    [franquias, busca],
+function ListaDeLojas({ lojas, busca }: Props) {
+  const lojasFiltradas = useMemo(
+    () => filtrarEOrdenarLojas(lojas, busca),
+    [lojas, busca],
   );
 
-  return <Tabela franquias={franquiasFiltradas} />;
+  return <Tabela lojas={lojasFiltradas} />;
 }
 ```
 
@@ -147,33 +147,33 @@ Componentes devem cuidar da apresentação e da interação. Coloque chamadas HT
 ### Incorreto
 
 ```tsx
-function ListaDeFranquias() {
-  const [franquias, setFranquias] = useState<Franquia[]>([]);
+function ListaDeLojas() {
+  const [lojas, setLojas] = useState<Loja[]>([]);
 
   useEffect(() => {
-    fetch("/api/franquias")
+    fetch("/api/lojas")
       .then((resposta) => resposta.json())
-      .then(setFranquias);
+      .then(setLojas);
   }, []);
 
-  return <Tabela franquias={franquias} />;
+  return <Tabela lojas={lojas} />;
 }
 ```
 
 ### Correto
 
 ```ts
-export async function buscarFranquias(): Promise<Franquia[]> {
-  const resposta = await fetch("/api/franquias");
+export async function buscarLojas(): Promise<Loja[]> {
+  const resposta = await fetch("/api/lojas");
   return resposta.json();
 }
 ```
 
 ```tsx
-function ListaDeFranquias() {
-  const { franquias, carregando } = useFranquias();
+function ListaDeLojas() {
+  const { lojas, carregando } = useLojas();
   if (carregando) return <Carregamento />;
-  return <Tabela franquias={franquias} />;
+  return <Tabela lojas={lojas} />;
 }
 ```
 
@@ -230,7 +230,7 @@ Use funções para declarar componentes. Elas integram naturalmente hooks, compo
 ### Incorreto
 
 ```tsx
-class TituloFranquia extends React.Component<Props> {
+class TituloLoja extends React.Component<Props> {
   render() {
     return <h1>{this.props.nome}</h1>;
   }
@@ -240,7 +240,7 @@ class TituloFranquia extends React.Component<Props> {
 ### Correto
 
 ```tsx
-function TituloFranquia({ nome }: Props) {
+function TituloLoja({ nome }: Props) {
   return <h1>{nome}</h1>;
 }
 ```
@@ -252,11 +252,11 @@ Forneça nomes acessíveis, estados e relacionamentos para elementos interativos
 ### Incorreto
 
 ```tsx
-function MenuFranquia({ aberto, alternar }: Props) {
+function MenuLoja({ aberto, alternar }: Props) {
   return (
     <>
       <div onClick={alternar}>Menu</div>
-      {aberto && <div>Opções da franquia</div>}
+      {aberto && <div>Opções da loja</div>}
     </>
   );
 }
@@ -265,20 +265,20 @@ function MenuFranquia({ aberto, alternar }: Props) {
 ### Correto
 
 ```tsx
-function MenuFranquia({ aberto, alternar }: Props) {
+function MenuLoja({ aberto, alternar }: Props) {
   return (
     <>
       <button
-        aria-controls="opcoes-franquia"
+        aria-controls="opcoes-loja"
         aria-expanded={aberto}
-        aria-label="Abrir opções da franquia"
+        aria-label="Abrir opções da loja"
         onClick={alternar}
         type="button"
       >
         Menu
       </button>
-      <nav aria-label="Opções da franquia" hidden={!aberto} id="opcoes-franquia">
-        <a href="/franquia">Detalhes</a>
+      <nav aria-label="Opções da loja" hidden={!aberto} id="opcoes-loja">
+        <a href="/loja">Detalhes</a>
       </nav>
     </>
   );
@@ -292,13 +292,13 @@ Use classes utilitárias do Tailwind diretamente no JSX e extraia componentes qu
 ### Incorreto
 
 ```tsx
-function CardFranquia({ nome }: { nome: string }) {
-  return <div className="card-franquia">{nome}</div>;
+function CardLoja({ nome }: { nome: string }) {
+  return <div className="card-loja">{nome}</div>;
 }
 ```
 
 ```css
-.card-franquia {
+.card-loja {
   border-radius: 8px;
   padding: 16px;
   background: white;
@@ -308,7 +308,7 @@ function CardFranquia({ nome }: { nome: string }) {
 ### Correto
 
 ```tsx
-function CardFranquia({ nome }: { nome: string }) {
+function CardLoja({ nome }: { nome: string }) {
   return (
     <article className="rounded-lg bg-white p-4 shadow-sm">
       <h2 className="text-lg font-semibold text-slate-900">{nome}</h2>

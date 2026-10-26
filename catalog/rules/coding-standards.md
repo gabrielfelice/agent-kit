@@ -128,12 +128,12 @@ Evite mais de três parâmetros em métodos e funções. Quando quatro ou mais v
 ### Incorreto
 
 ```ts
-function criarFranquia(
+function criarLoja(
   nome: string,
   cidade: string,
   estado: string,
   investimento: number,
-): Franquia {
+): Loja {
   return { nome, cidade, estado, investimento };
 }
 ```
@@ -141,14 +141,14 @@ function criarFranquia(
 ### Correto
 
 ```ts
-type CriarFranquiaParams = {
+type CriarLojaParams = {
   nome: string;
   cidade: string;
   estado: string;
   investimento: number;
 };
 
-function criarFranquia(params: CriarFranquiaParams): Franquia {
+function criarLoja(params: CriarLojaParams): Loja {
   return { ...params };
 }
 ```
@@ -193,7 +193,7 @@ Extraia números e strings mágicos para constantes com nomes que expressem o co
 if (tentativas >= 3) {
   throw new Error("Limite excedido");
 }
-if (usuario.tipo === "franqueado") {
+if (usuario.tipo === "administrador") {
   liberarAcesso(usuario);
 }
 ```
@@ -202,13 +202,13 @@ if (usuario.tipo === "franqueado") {
 
 ```ts
 const MAXIMO_DE_TENTATIVAS = 3;
-const TIPO_FRANQUEADO = "franqueado";
+const TIPO_ADMINISTRADOR = "administrador";
 const MENSAGEM_LIMITE_EXCEDIDO = "Limite excedido";
 
 if (tentativas >= MAXIMO_DE_TENTATIVAS) {
   throw new Error(MENSAGEM_LIMITE_EXCEDIDO);
 }
-if (usuario.tipo === TIPO_FRANQUEADO) {
+if (usuario.tipo === TIPO_ADMINISTRADOR) {
   liberarAcesso(usuario);
 }
 ```

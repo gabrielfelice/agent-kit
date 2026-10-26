@@ -66,20 +66,20 @@ Não use `any` explícito nem recorra a ele para silenciar erros de tipagem. Pre
 ### Incorreto
 
 ```ts
-function exibirFranquia(franquia: any): string {
-  return franquia.nome;
+function exibirLoja(loja: any): string {
+  return loja.nome;
 }
 ```
 
 ### Correto
 
 ```ts
-type Franquia = {
+type Loja = {
   nome: string;
 };
 
-function exibirFranquia(franquia: Franquia): string {
-  return franquia.nome;
+function exibirLoja(loja: Loja): string {
+  return loja.nome;
 }
 ```
 
@@ -105,16 +105,16 @@ Prefira arrow functions em callbacks de `map`, `filter`, `reduce`, `sort`, `forE
 ### Incorreto
 
 ```ts
-const nomes = franquias.map(function (franquia: Franquia): string {
-  return franquia.nome;
+const nomes = lojas.map(function (loja: Loja): string {
+  return loja.nome;
 });
 ```
 
 ### Correto
 
 ```ts
-function listarNomes(franquias: Franquia[]): string[] {
-  return franquias.map((franquia) => franquia.nome);
+function listarNomes(lojas: Loja[]): string[] {
+  return lojas.map((loja) => loja.nome);
 }
 ```
 
@@ -129,18 +129,18 @@ Use ternários apenas para decisões simples e sem aninhamento. Não coloque um 
 ```ts
 const etiqueta = ativo
   ? premium
-    ? "Franquia premium ativa"
-    : "Franquia ativa"
-  : "Franquia inativa";
+    ? "Loja premium ativa"
+    : "Loja ativa"
+  : "Loja inativa";
 ```
 
 ### Correto
 
 ```ts
 function obterEtiqueta(ativo: boolean, premium: boolean): string {
-  if (!ativo) return "Franquia inativa";
-  if (premium) return "Franquia premium ativa";
-  return "Franquia ativa";
+  if (!ativo) return "Loja inativa";
+  if (premium) return "Loja premium ativa";
+  return "Loja ativa";
 }
 
 const etiqueta = obterEtiqueta(ativo, premium);
@@ -257,16 +257,16 @@ Represente a ausência de um valor com `undefined` ou `null` de forma consistent
 ### Incorreto
 
 ```ts
-function obterNome(franquia?: Franquia): string {
-  return franquia!.nome;
+function obterNome(loja?: Loja): string {
+  return loja!.nome;
 }
 ```
 
 ### Correto
 
 ```ts
-function obterNome(franquia?: Franquia): string {
-  return franquia?.nome ?? "Franquia não informada";
+function obterNome(loja?: Loja): string {
+  return loja?.nome ?? "Loja não informada";
 }
 ```
 
@@ -279,17 +279,17 @@ Não use `as` para forçar o compilador a aceitar um valor sem comprovar que ele
 ### Incorreto
 
 ```ts
-const franquia = resposta.json() as Franquia;
+const loja = resposta.json() as Loja;
 ```
 
 ### Correto
 
 ```ts
 const dados: unknown = await resposta.json();
-const franquia = validarFranquia(dados);
+const loja = validarLoja(dados);
 ```
 
-A função de validação deve confirmar a estrutura recebida e retornar `Franquia` ou sinalizar o erro de forma explícita.
+A função de validação deve confirmar a estrutura recebida e retornar `Loja` ou sinalizar o erro de forma explícita.
 
 ## 12. Nomeie tipos e funções pelo domínio
 
@@ -306,12 +306,12 @@ function fn(data: unknown): unknown {
 ### Correto
 
 ```ts
-type PropostaDeFranquia = {
+type PropostaDeAberturaDeLoja = {
   investimentoInicial: number;
 };
 
 function calcularInvestimentoInicial(
-  proposta: PropostaDeFranquia,
+  proposta: PropostaDeAberturaDeLoja,
 ): number {
   return proposta.investimentoInicial;
 }
