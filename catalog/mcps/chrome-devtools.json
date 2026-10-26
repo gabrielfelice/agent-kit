@@ -1,0 +1,5 @@
+{
+  "description": "Testa a implementação num Chrome real e visível, para o usuário acompanhar enquanto o agente navega.",
+  "command": "npx",
+  "args": ["-y", "chrome-devtools-mcp@latest"]
+}

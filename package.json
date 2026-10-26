@@ -1,0 +1,33 @@
+{
+  "name": "@gabrielfelice/agent-kit",
+  "version": "0.1.0",
+  "description": "Rules, skills e MCPs reutilizáveis para Claude Code e Codex, instalados por uma CLI interativa.",
+  "type": "module",
+  "bin": {
+    "agent-kit": "bin/agent-kit.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "catalog"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "node --test --experimental-test-coverage --test-coverage-lines=80 --test-coverage-branches=80 --test-coverage-functions=80 --test-coverage-include=src/** --test-coverage-exclude=src/prompts.js",
+    "test:rapido": "node --test"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "^1.8.1",
+    "smol-toml": "^1.9.1",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0"
+  }
+}

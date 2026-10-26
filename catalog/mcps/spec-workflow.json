@@ -1,0 +1,5 @@
+{
+  "description": "Fluxo de specs (requirements, design e tasks) com painel de acompanhamento.",
+  "command": "npx",
+  "args": ["-y", "spec-workflow-mcp@latest"]
+}
