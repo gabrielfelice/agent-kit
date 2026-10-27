@@ -12,13 +12,17 @@ const HEADER = [
   "",
   "## Onde cada coisa fica",
   "",
-  "- `.agents/rules/` e `.agents/skills/` guardam a única cópia de cada rule e skill. Alterações feitas à mão nesses arquivos são desfeitas pelo `update`.",
+  "- `.agents/rules/` e `.agents/skills/` guardam a fonte de cada rule e skill. As cópias convertidas para Cursor e Copilot são geradas a partir delas. Alterações feitas à mão nesses arquivos são desfeitas pelo `update`.",
   "- `.agent-kit.json` registra o que o kit criou. `update` e `remove` mexem só nesses arquivos.",
 ];
 
 const AGENT_LAYOUT = Object.freeze({
   claude: "- **Claude Code:** symlinks em `.claude/rules/` (carregadas automaticamente) e `.claude/skills/`, MCPs no `.mcp.json`. O `.claude/README.md` aponta para este arquivo.",
   codex: "- **Codex:** lê as skills direto de `.agents/skills/`, as rules pelo trecho no `AGENTS.md` (veja `snippet` abaixo) e os MCPs do bloco gerenciado no `.codex/config.toml`.",
+  cursor: "- **Cursor:** lê as skills direto de `.agents/skills/`, as rules de cópias convertidas em `.cursor/rules/*.mdc` e os MCPs do `.cursor/mcp.json`.",
+  copilot: "- **GitHub Copilot (VS Code):** lê as skills direto de `.agents/skills/`, as rules de cópias convertidas em `.github/instructions/*.instructions.md` e os MCPs do `.vscode/mcp.json`.",
+  gemini: "- **Gemini CLI:** lê as skills direto de `.agents/skills/`, as rules pelo trecho no `GEMINI.md` e os MCPs do `.gemini/settings.json`.",
+  opencode: "- **OpenCode:** lê as skills direto de `.agents/skills/`, as rules pelo trecho no `AGENTS.md` e os MCPs do `opencode.json`.",
 });
 
 const COMMANDS = [
@@ -30,7 +34,7 @@ const COMMANDS = [
   "- `list`: mostra o catálogo e o que já está instalado.",
   "- `update`: traz a versão atual do kit para os itens instalados.",
   "- `remove`: remove itens instalados pelo kit.",
-  "- `snippet`: mostra o trecho sugerido para o `AGENTS.md` e o `CLAUDE.md`.",
+  "- `snippet`: mostra o trecho sugerido para o `AGENTS.md`, o `CLAUDE.md` ou o `GEMINI.md`.",
 ];
 
 const codeList = (keys) => keys.map((key) => `\`${key}\``).join(", ");

@@ -1,6 +1,6 @@
 # agent-kit
 
-Conjunto de guardrails para trabalhar com agentes de LLM em projetos: **rules**, **skills** e **MCPs** reutilizáveis, levados para qualquer repositório por uma CLI interativa. Por enquanto, os agentes suportados são **Claude Code** e **Codex**.
+Conjunto de guardrails para trabalhar com agentes de LLM em projetos: **rules**, **skills** e **MCPs** reutilizáveis, levados para qualquer repositório por uma CLI interativa. Os agentes suportados são **Claude Code**, **Codex**, **Cursor**, **GitHub Copilot (VS Code)**, **Gemini CLI** e **OpenCode**. Claude Code e Codex vêm marcados por padrão.
 
 ```bash
 cd meu-projeto
@@ -12,7 +12,7 @@ O comando abre um menu para escolher os agentes e os itens:
 
 ```
 ┌  agent-kit
-◆  Para quais agentes?          ◼ Claude Code  ◼ Codex
+◆  Para quais agentes?          ◼ Claude Code  ◼ Codex  ◻ Cursor  ◻ GitHub Copilot (VS Code)  ◻ Gemini CLI  ◻ OpenCode
 ◆  O que você quer trazer para este repositório?
 │  ◻ Rules     ◻ coding-standards  ◻ javascript-typescript  ◻ tests
 │  ◻ Skills    ◻ comentario-issue-commit  ◻ estrutura-de-pastas  ◻ git-rebase …
@@ -38,18 +38,21 @@ O comando abre um menu para escolher os agentes e os itens:
 
 ## O que vai para o repositório
 
-| | Fonte única | Claude Code | Codex |
-|---|---|---|---|
-| Rules | `.agents/rules/<nome>.md` | symlink em `.claude/rules/` (carregada automaticamente) | lida pelo trecho no `AGENTS.md` |
-| Skills | `.agents/skills/<nome>/` | symlink em `.claude/skills/` | lida nativamente de `.agents/skills/` |
-| MCPs | — | mesclado no `.mcp.json` | bloco gerenciado no `.codex/config.toml` |
-| README | `.agents/README.md` | symlink em `.claude/README.md` | lido de `.agents/README.md` |
+| | Fonte única | Claude Code | Codex | Cursor | Copilot (VS Code) | Gemini CLI | OpenCode |
+|---|---|---|---|---|---|---|---|
+| Rules | `.agents/rules/<nome>.md` | symlink em `.claude/rules/` | trecho no `AGENTS.md` | cópia convertida em `.cursor/rules/<nome>.mdc` | cópia convertida em `.github/instructions/<nome>.instructions.md` | trecho no `GEMINI.md` | trecho no `AGENTS.md` |
+| Skills | `.agents/skills/<nome>/` | symlink em `.claude/skills/` | nativo | nativo | nativo | nativo | nativo |
+| MCPs | — | `.mcp.json` | bloco gerenciado no `.codex/config.toml` | `.cursor/mcp.json` | `.vscode/mcp.json` | `.gemini/settings.json` | `opencode.json` |
+| README | `.agents/README.md` | symlink em `.claude/README.md` | lido de `.agents/README.md` | idem | idem | idem | idem |
 
-- **Sem duplicação:** cada rule e skill existe uma vez só, em `.agents/`. Os symlinks são relativos e funcionam pra quem clonar o repo. No Windows sem suporte a symlink, use `--copy`: a opção fica registrada no manifesto e vale também para `update` e `remove`.
+"Nativo" quer dizer que o agente já procura skills em `.agents/skills/`.
+
+
+- **Sem duplicação:** cada rule e skill existe uma vez só, em `.agents/`. A exceção são as rules do Cursor e do Copilot: esses agentes exigem um frontmatter próprio (`alwaysApply`/`globs` e `applyTo`), então o kit gera uma cópia convertida, refeita a cada `update`. O `paths` da rule vira `globs`/`applyTo`. Sem `paths`, a rule vale sempre. Os symlinks são relativos e funcionam pra quem clonar o repo. No Windows sem suporte a symlink, use `--copy`: a opção fica registrada no manifesto e vale também para `update` e `remove`.
 - **README para o time:** o `.agents/README.md` explica, para quem abre o repositório, o que cada rule, skill e MCP instalado faz, onde cada coisa fica em cada agente e como adicionar, atualizar ou remover itens. Ele lista só o que está instalado e é refeito a cada `add`, `update` e `remove`. Os agentes não carregam esse arquivo, então ele não gasta contexto.
 - **Manifesto:** o `.agent-kit.json` registra o que o kit criou. Com isso, `update` e `remove` mexem só nesses arquivos.
 - **Sem sobrescrever o que é do projeto:** um arquivo ou MCP com o mesmo nome que já existia é preservado e aparece no relatório como `↷`. Use `--force` para substituir.
-- **O `AGENTS.md` e o `CLAUDE.md` não são alterados.** No final, a CLI mostra um trecho para você colar neles. O trecho importa principalmente para o Codex, que só lê rules a partir do `AGENTS.md`. Para ver o trecho de novo, rode `agent-kit snippet`.
+- **O `AGENTS.md`, o `CLAUDE.md` e o `GEMINI.md` não são alterados.** No final, a CLI mostra um trecho para você colar neles. O trecho importa principalmente para Codex, OpenCode e Gemini CLI, que só leem rules a partir desses arquivos. Para ver o trecho de novo, rode `agent-kit snippet`.
 
 ## Comandos
 
@@ -86,9 +89,16 @@ Se a janela não aparecer (só o ícone na barra de tarefas, ou o aviso `[WARN:C
 
 No Codex, o `.codex/config.toml` do projeto só é carregado em projetos marcados como confiáveis.
 
+## Observações por agente
+
+- **Gemini CLI:** lê o `GEMINI.md` por padrão. Para usar o `AGENTS.md`, defina `"context": { "fileName": ["AGENTS.md", "GEMINI.md"] }` no `.gemini/settings.json`.
+- **OpenCode:** o kit escreve no `opencode.json`. Se o projeto usa `opencode.jsonc`, o kit não o lê e cria um `opencode.json` à parte.
+- **Contexto duplicado:** o VS Code também lê `.claude/rules` e `.claude/skills`, e o Cursor lê `.claude/skills`. Com Claude Code e Copilot/Cursor marcados juntos, a mesma rule ou skill pode ser carregada duas vezes. Pelo mesmo motivo, o VS Code pode mostrar os MCPs em dobro se carregar o `.mcp.json` do Claude. Marque só os agentes que o time usa.
+- **Variáveis de ambiente nos MCPs:** o catálogo usa `${VARIAVEL}`. O kit converte para `${env:VARIAVEL}` no Cursor e no VS Code e para `{env:VARIAVEL}` no OpenCode.
+
 ## Adicionar itens ao catálogo
 
-- **Rule:** `catalog/rules/<nome>.md`, com `description` no frontmatter (aparece no menu). Para restringir a regra a certos arquivos no Claude Code, use `paths`.
+- **Rule:** `catalog/rules/<nome>.md`, com `description` no frontmatter (aparece no menu). Para restringir a regra a certos arquivos, use `paths`: vale no Claude Code e vira `globs` no Cursor e `applyTo` no Copilot.
 - **Skill:** `catalog/skills/<nome>/SKILL.md`, no padrão Agent Skills (`name` e `description`).
 - **MCP:** `catalog/mcps/<nome>.json` com `description`, `command`, `args` e, se precisar, `env`. Segredos sempre como `${VARIAVEL}`.
 - **Texto do README:** `catalog/docs/<tipo>/<nome>.md`, explicando o item para pessoas (o `description` é escrito para o agente). Sem esse arquivo, o README usa o `description`.

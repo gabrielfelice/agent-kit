@@ -1,7 +1,7 @@
 {
   "name": "@gabrielfelice/agent-kit",
   "version": "0.1.0",
-  "description": "Rules, skills e MCPs reutilizáveis para Claude Code e Codex, instalados por uma CLI interativa.",
+  "description": "Rules, skills e MCPs reutilizáveis para Claude Code, Codex, Cursor, GitHub Copilot, Gemini CLI e OpenCode, instalados por uma CLI interativa.",
   "type": "module",
   "bin": {
     "agent-kit": "bin/agent-kit.js"

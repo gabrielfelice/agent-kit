@@ -1,4 +1,4 @@
-import { AGENT_IDS } from "./agents.js";
+import { DEFAULT_AGENT_IDS } from "./agents.js";
 import { loadCatalog } from "./catalog.js";
 import { KIND_LABEL, KINDS } from "./constants.js";
 import { install, remove, update } from "./install.js";
@@ -6,7 +6,7 @@ import { readManifest } from "./manifest.js";
 import { renderInstall, renderRemove } from "./report.js";
 import { buildSnippet } from "./snippet.js";
 
-const SNIPPET_TITLE = "Trecho sugerido para o AGENTS.md / CLAUDE.md:";
+const SNIPPET_TITLE = "Trecho sugerido para o AGENTS.md / CLAUDE.md / GEMINI.md:";
 const NOTHING_INSTALLED = "Nada instalado pelo agent-kit neste repositório.";
 
 const print = (lines) => console.log(lines.join("\n"));
@@ -15,7 +15,7 @@ const defaultAgents = (options, manifest) => {
   if (options.agentIds.length > 0) {
     return options.agentIds;
   }
-  return manifest.agents.length > 0 ? manifest.agents : [...AGENT_IDS];
+  return manifest.agents.length > 0 ? manifest.agents : [...DEFAULT_AGENT_IDS];
 };
 
 const requireTerminal = (hint) => {

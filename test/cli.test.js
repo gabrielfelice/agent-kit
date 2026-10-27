@@ -1,9 +1,11 @@
 import assert from "node:assert/strict";
+import path from "node:path";
 import { describe, it, mock } from "node:test";
 import { parseCli } from "../src/args.js";
 import { run } from "../src/cli.js";
+import { exists } from "../src/fs-utils.js";
 import { summarize } from "../src/snippet.js";
-import { createRepo } from "./helpers.js";
+import { createRepo, readJsonFile } from "./helpers.js";
 
 const capture = async (argv) => {
   const log = mock.method(console, "log", () => {});
@@ -38,6 +40,15 @@ describe("comandos", () => {
     assert.match(await capture(["update", "--dir", dir]), /Nada instalado/);
     assert.match(await capture(["remove", "--dir", dir, "--skills", "node"]), /Nada instalado/);
     assert.match(await capture(["snippet", "--dir", dir]), /Nada instalado/);
+  });
+
+  it("sem --agents nem manifesto, instala só para Claude Code e Codex", async () => {
+    const dir = await createRepo();
+    await capture(["add", "--dir", dir, "--rules", "tests", "--mcps", "playwright"]);
+    assert.deepEqual((await readJsonFile(dir, ".agent-kit.json")).agents, ["claude", "codex"]);
+    for (const relative of [".cursor", ".github", ".vscode", ".gemini", "opencode.json"]) {
+      assert.equal(await exists(path.join(dir, relative)), false, relative);
+    }
   });
 
   it("mostra ajuda e rejeita comando desconhecido", async () => {

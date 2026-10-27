@@ -63,6 +63,6 @@ describe("install", () => {
 
   it("rejeita agente desconhecido", async () => {
     const repo = await createRepo();
-    await assert.rejects(install({ repo, agentIds: ["cursor"], keys: ["rules/tests"] }), /Agente desconhecido/);
+    await assert.rejects(install({ repo, agentIds: ["windsurf"], keys: ["rules/tests"] }), /Agente desconhecido/);
   });
 });

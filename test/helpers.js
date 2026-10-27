@@ -9,3 +9,5 @@ export const readJsonFile = async (repo, relative) => JSON.parse(await readFile(
 export const readTextFile = (repo, relative) => readFile(path.join(repo, relative), "utf8");
 
 export const BOTH_AGENTS = Object.freeze(["claude", "codex"]);
+
+export const NEW_AGENTS = Object.freeze(["cursor", "copilot", "gemini", "opencode"]);
