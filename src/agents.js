@@ -13,12 +13,13 @@ export const AGENTS = Object.freeze({
     readme: ".claude/README.md",
     mcp: claudeMcp,
   },
-  codex: { id: "codex", label: "Codex", links: {}, mcp: codexMcp },
+  codex: { id: "codex", label: "Codex", links: {}, readme: ".codex/README.md", mcp: codexMcp },
   cursor: {
     id: "cursor",
     label: "Cursor",
     links: {},
     generated: generatedRules(".cursor/rules", ".mdc", "cursor"),
+    readme: ".cursor/README.md",
     mcp: cursorMcp,
   },
   copilot: {
@@ -28,7 +29,7 @@ export const AGENTS = Object.freeze({
     generated: generatedRules(".github/instructions", ".instructions.md", "copilot"),
     mcp: copilotMcp,
   },
-  gemini: { id: "gemini", label: "Gemini CLI", links: {}, mcp: geminiMcp },
+  gemini: { id: "gemini", label: "Gemini CLI", links: {}, readme: ".gemini/README.md", mcp: geminiMcp },
   opencode: { id: "opencode", label: "OpenCode", links: {}, mcp: opencodeMcp },
 });
 

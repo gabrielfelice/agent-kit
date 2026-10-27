@@ -34,6 +34,19 @@ describe("README gerado", () => {
     assert.ok(manifest.files.includes(README) && manifest.files.includes(CLAUDE_README));
   });
 
+  it("cria symlinks em .codex, .cursor e .gemini, mas não em .github nem para o OpenCode", async () => {
+    const repo = await createRepo();
+    await install({ repo, agentIds: ["codex", "cursor", "copilot", "gemini", "opencode"], keys: ["rules/tests"] });
+    for (const dir of [".codex", ".cursor", ".gemini"]) {
+      assert.equal(await readlink(path.join(repo, dir, "README.md")), "../.agents/README.md");
+    }
+    assert.equal(await exists(path.join(repo, ".github/README.md")), false);
+    await remove({ repo, keys: ["rules/tests"] });
+    for (const dir of [".codex", ".cursor", ".gemini", ".github"]) {
+      assert.equal(await exists(path.join(repo, dir)), false, dir);
+    }
+  });
+
   it("mantém a cópia no modo copy também no update e no remove", async () => {
     const repo = await createRepo();
     await install({ repo, agentIds: ["claude"], keys: ["rules/tests", "skills/node"], copy: true });

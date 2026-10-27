@@ -45,7 +45,7 @@ describe("rules convertidas", () => {
   it("não cria pastas de skills para os agentes que leem .agents/skills", async () => {
     const repo = await createRepo();
     const { context } = await install({ repo, agentIds: NEW_AGENTS, keys: ["skills/node"] });
-    assert.deepEqual(context.files, [".agents/skills/node", ".agents/README.md"]);
+    assert.deepEqual(context.files.filter((file) => file.includes("skills")), [".agents/skills/node"]);
   });
 });
 

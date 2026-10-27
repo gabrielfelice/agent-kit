@@ -43,9 +43,9 @@ O comando abre um menu para escolher os agentes e os itens:
 | Rules | `.agents/rules/<nome>.md` | symlink em `.claude/rules/` | trecho no `AGENTS.md` | cópia convertida em `.cursor/rules/<nome>.mdc` | cópia convertida em `.github/instructions/<nome>.instructions.md` | trecho no `GEMINI.md` | trecho no `AGENTS.md` |
 | Skills | `.agents/skills/<nome>/` | symlink em `.claude/skills/` | nativo | nativo | nativo | nativo | nativo |
 | MCPs | — | `.mcp.json` | bloco gerenciado no `.codex/config.toml` | `.cursor/mcp.json` | `.vscode/mcp.json` | `.gemini/settings.json` | `opencode.json` |
-| README | `.agents/README.md` | symlink em `.claude/README.md` | lido de `.agents/README.md` | idem | idem | idem | idem |
+| README | `.agents/README.md` | symlink em `.claude/README.md` | symlink em `.codex/README.md` | symlink em `.cursor/README.md` | só `.agents/README.md` \* | symlink em `.gemini/README.md` | só `.agents/README.md` |
 
-"Nativo" quer dizer que o agente já procura skills em `.agents/skills/`.
+"Nativo" quer dizer que o agente já procura skills em `.agents/skills/`. \* O Copilot não ganha `.github/README.md` porque o GitHub mostraria esse arquivo na página inicial do repositório no lugar do `README.md` da raiz.
 
 
 - **Sem duplicação:** cada rule e skill existe uma vez só, em `.agents/`. A exceção são as rules do Cursor e do Copilot: esses agentes exigem um frontmatter próprio (`alwaysApply`/`globs` e `applyTo`), então o kit gera uma cópia convertida, refeita a cada `update`. O `paths` da rule vira `globs`/`applyTo`. Sem `paths`, a rule vale sempre. Os symlinks são relativos e funcionam pra quem clonar o repo. No Windows sem suporte a symlink, use `--copy`: a opção fica registrada no manifesto e vale também para `update` e `remove`.
