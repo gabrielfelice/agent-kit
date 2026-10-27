@@ -7,6 +7,7 @@ export const AGENTS = Object.freeze({
     id: "claude",
     label: "Claude Code",
     links: { [KIND.RULES]: ".claude/rules", [KIND.SKILLS]: ".claude/skills" },
+    readme: ".claude/README.md",
     mcp: claudeMcp,
   },
   codex: { id: "codex", label: "Codex", links: {}, mcp: codexMcp },

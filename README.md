@@ -43,8 +43,10 @@ O comando abre um menu para escolher os agentes e os itens:
 | Rules | `.agents/rules/<nome>.md` | symlink em `.claude/rules/` (carregada automaticamente) | lida pelo trecho no `AGENTS.md` |
 | Skills | `.agents/skills/<nome>/` | symlink em `.claude/skills/` | lida nativamente de `.agents/skills/` |
 | MCPs | — | mesclado no `.mcp.json` | bloco gerenciado no `.codex/config.toml` |
+| README | `.agents/README.md` | symlink em `.claude/README.md` | lido de `.agents/README.md` |
 
-- **Sem duplicação:** cada rule e skill existe uma vez só, em `.agents/`. Os symlinks são relativos e funcionam pra quem clonar o repo. No Windows sem suporte a symlink, use `--copy`.
+- **Sem duplicação:** cada rule e skill existe uma vez só, em `.agents/`. Os symlinks são relativos e funcionam pra quem clonar o repo. No Windows sem suporte a symlink, use `--copy`: a opção fica registrada no manifesto e vale também para `update` e `remove`.
+- **README para o time:** o `.agents/README.md` explica, para quem abre o repositório, o que cada rule, skill e MCP instalado faz, onde cada coisa fica em cada agente e como adicionar, atualizar ou remover itens. Ele lista só o que está instalado e é refeito a cada `add`, `update` e `remove`. Os agentes não carregam esse arquivo, então ele não gasta contexto.
 - **Manifesto:** o `.agent-kit.json` registra o que o kit criou. Com isso, `update` e `remove` mexem só nesses arquivos.
 - **Sem sobrescrever o que é do projeto:** um arquivo ou MCP com o mesmo nome que já existia é preservado e aparece no relatório como `↷`. Use `--force` para substituir.
 - **O `AGENTS.md` e o `CLAUDE.md` não são alterados.** No final, a CLI mostra um trecho para você colar neles. O trecho importa principalmente para o Codex, que só lê rules a partir do `AGENTS.md`. Para ver o trecho de novo, rode `agent-kit snippet`.
@@ -89,6 +91,7 @@ No Codex, o `.codex/config.toml` do projeto só é carregado em projetos marcado
 - **Rule:** `catalog/rules/<nome>.md`, com `description` no frontmatter (aparece no menu). Para restringir a regra a certos arquivos no Claude Code, use `paths`.
 - **Skill:** `catalog/skills/<nome>/SKILL.md`, no padrão Agent Skills (`name` e `description`).
 - **MCP:** `catalog/mcps/<nome>.json` com `description`, `command`, `args` e, se precisar, `env`. Segredos sempre como `${VARIAVEL}`.
+- **Texto do README:** `catalog/docs/<tipo>/<nome>.md`, explicando o item para pessoas (o `description` é escrito para o agente). Sem esse arquivo, o README usa o `description`.
 - **Dependências entre itens:** `catalog/requires.json`, por exemplo `{ "skills/testes": ["rules/tests"] }`.
 
 O menu lê o catálogo direto das pastas: não é preciso mexer no código.

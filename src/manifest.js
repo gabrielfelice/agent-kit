@@ -4,7 +4,7 @@ import { KIT_ROOT, MANIFEST_FILE } from "./constants.js";
 import { readJson, removeEntry, writeJson } from "./fs-utils.js";
 
 const PACKAGE_FILE = "package.json";
-const EMPTY_MANIFEST = Object.freeze({ agents: [], items: [], files: [], mcpServers: {} });
+const EMPTY_MANIFEST = Object.freeze({ agents: [], items: [], files: [], mcpServers: {}, copy: false });
 
 const kitVersion = async () => JSON.parse(await readFile(path.join(KIT_ROOT, PACKAGE_FILE), "utf8")).version;
 

@@ -23,7 +23,7 @@ describe("install", () => {
   it("não cria .claude quando só o Codex é escolhido", async () => {
     const repo = await createRepo();
     const { context } = await install({ repo, agentIds: ["codex"], keys: ["rules/tests"] });
-    assert.deepEqual(context.files, [".agents/rules/tests.md"]);
+    assert.deepEqual(context.files, [".agents/rules/tests.md", ".agents/README.md"]);
   });
 
   it("instala dependências e registra tudo no manifesto", async () => {

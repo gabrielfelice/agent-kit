@@ -17,7 +17,7 @@ export const linkPaths = (item, agents) =>
 
 export const itemPaths = (item, agents) => [canonicalPath(item), ...linkPaths(item, agents)];
 
-const canWrite = async (context, relative) => {
+export const canWrite = async (context, relative) => {
   if (context.force || context.owned.has(relative)) {
     return true;
   }
@@ -28,15 +28,13 @@ const canWrite = async (context, relative) => {
   return false;
 };
 
-const placeLink = async (context, { item, relative }) => {
+export const placeLink = async (context, { canonical, relative, isDirectory }) => {
   if (!(await canWrite(context, relative))) {
     return;
   }
-  const target = path.join(context.repo, canonicalPath(item));
+  const target = path.join(context.repo, canonical);
   const link = path.join(context.repo, relative);
-  await (context.copy
-    ? copyEntry(target, link)
-    : linkEntry({ target, link, isDirectory: item.kind === KIND.SKILLS }));
+  await (context.copy ? copyEntry(target, link) : linkEntry({ target, link, isDirectory }));
   context.files.push(relative);
 };
 
@@ -49,6 +47,6 @@ export const placeFileItem = async (context, item) => {
   context.files.push(relative);
   context.installed.push(item.key);
   for (const link of linkPaths(item, context.agents)) {
-    await placeLink(context, { item, relative: link });
+    await placeLink(context, { canonical: relative, relative: link, isDirectory: item.kind === KIND.SKILLS });
   }
 };
